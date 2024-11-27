@@ -30,7 +30,7 @@ function ChatBox({ initialMessages }) {
 
             try {
                 setLoading(true);
-                const response = await axios.post("http://localhost:3000/api/chat", {
+                const response = await axios.post(process.env.NEXT_PUBLIC_API_URL + "/chat", {
                     question: message,
                     history: conversations,
                 });
