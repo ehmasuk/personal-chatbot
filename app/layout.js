@@ -1,4 +1,4 @@
-import { AntdRegistry } from "@ant-design/nextjs-registry";
+
 import localFont from "next/font/local";
 import "./globals.css";
 
@@ -22,7 +22,7 @@ export default function RootLayout({ children }) {
     return (
         <html lang="en">
             <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-                <AntdRegistry>{children}</AntdRegistry>
+                {children}
             </body>
         </html>
     );
