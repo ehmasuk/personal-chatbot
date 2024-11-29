@@ -1,4 +1,4 @@
-
+import { AntdRegistry } from "@ant-design/nextjs-registry";
 import localFont from "next/font/local";
 import "./globals.css";
 
@@ -14,15 +14,15 @@ const geistMono = localFont({
 });
 
 export const metadata = {
-    title: "Ehmasuk chatbot",
-    description: "Ehmasuk chatbot",
+    title: "Lms chatbot",
+    description: "Lms chatbot",
 };
 
 export default function RootLayout({ children }) {
     return (
         <html lang="en">
             <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-                {children}
+                <AntdRegistry>{children}</AntdRegistry>
             </body>
         </html>
     );

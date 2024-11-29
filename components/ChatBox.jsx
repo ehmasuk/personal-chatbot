@@ -1,6 +1,6 @@
 "use client";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { GoPaperAirplane } from "react-icons/go";
 
 function ChatBox({ initialMessages }) {
@@ -32,7 +32,9 @@ function ChatBox({ initialMessages }) {
                 setLoading(true);
                 const response = await axios.post(process.env.NEXT_PUBLIC_API_URL + "/chat", {
                     question: message,
-                    history: conversations,
+                    history: conversations.map((e) => {
+                        return { role: e.role, message: e.message };
+                    }),
                 });
                 console.log({
                     question: message,
@@ -55,8 +57,6 @@ function ChatBox({ initialMessages }) {
         }
     };
 
-
-
     return (
         <div className="flex h-full w-full flex-col">
             <div className="flex h-full w-full flex-col">
@@ -73,7 +73,7 @@ function ChatBox({ initialMessages }) {
                             </div>
                         </header>
                         <div className="relative flex flex-1 basis-full flex-col overflow-y-hidden scroll-smooth shadow-inner">
-                            <div className="flex w-full flex-1 flex-col space-y-5 overflow-y-auto px-5 pt-5 pb-4 sm:overscroll-contain">
+                            <div className="flex w-full flex-1 flex-col space-y-1 overflow-y-auto px-5 pt-5 pb-4 sm:overscroll-contain">
                                 {conversations?.map((message, index) => {
                                     if (message.role === "bot") {
                                         return (
@@ -81,7 +81,7 @@ function ChatBox({ initialMessages }) {
                                                 <div className="group/message relative max-w-[min(calc(100%-40px),65ch)]">
                                                     <div className="hyphens-auto break-words text-left text-sm leading-5 relative inline-block max-w-full rounded-[20px] rounded-bl px-5 py-4 bg-zinc-200/50 text-zinc-800">
                                                         <div className="w-full text-sm">
-                                                            <div>{message.message}</div>
+                                                            <pre>{message.message}</pre>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -99,7 +99,13 @@ function ChatBox({ initialMessages }) {
                                         );
                                     }
                                 })}
-                                {loading && <span className="text-sm text-gray-600 !mt-1 animate-pulse">Writing..</span>}
+                                {loading && (
+                                    <div className="inline-flex gap-1 items-center animate-pulse">
+                                        <div className="h-1.5 w-1.5 bg-black rounded-full animate-bounce [animation-delay:-0.3s]" />
+                                        <div className="h-1.5 w-1.5 bg-black rounded-full animate-bounce [animation-delay:-0.15s]" />
+                                        <div className="h-1.5 w-1.5 bg-black rounded-full animate-bounce" />
+                                    </div>
+                                )}
                             </div>
                         </div>
                         <div className="flex shrink-0 flex-col justify-end">

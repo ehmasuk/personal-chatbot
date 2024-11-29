@@ -9,6 +9,7 @@
         "lint": "next lint"
     },
     "dependencies": {
+        "@ant-design/nextjs-registry": "^1.0.2",
         "@langchain/core": "^0.3.13",
         "@langchain/openai": "^0.3.11",
         "@langchain/pinecone": "^0.1.3",

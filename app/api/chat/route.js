@@ -1,4 +1,5 @@
 import { Document } from "@langchain/core/documents";
+import { StringOutputParser } from "@langchain/core/output_parsers";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { ChatOpenAI, OpenAIEmbeddings } from "@langchain/openai";
 import { Pinecone } from "@pinecone-database/pinecone";
@@ -42,23 +43,21 @@ export const POST = async (req) => {
     const searchResults = await pineconeIndex.namespace("text-data").query(queryRequest);
 
     // Format the retrieved data as context
-    // const contextData = searchResults.matches.map((match) => match.metadata.text).join("\n");
-    const contextData = searchResults.matches.slice(0, 2).map((match) => match.metadata.text).join("\n");
-
+    const contextData = searchResults.matches.map((match) => match.metadata.text).join("\n");
 
     const document1 = new Document({
         pageContent: contextData,
     });
 
-    // create prompt
-    const prompt = ChatPromptTemplate.fromTemplate(`
-        You are a helpful and conversational chatbot. 
+    const instructions = `You are a helpful and conversational chatbot. 
         Answer user questions naturally without explicitly referencing any additional context unless specifically asked.
-        If the question cannot be answered based on your knowledge, politely explain and guide the user to provide more specific information.
+        If the question cannot be answered based on your knowledge, politely explain and guide the user to provide more specific information.`;
 
+    // create prompt
+    const prompt = ChatPromptTemplate.fromTemplate(`{instructions}
         Context: {context}
+        Chat history: {history}
         Question: {userQuestion}
-        History: {history}
     `);
 
     // create chain
@@ -68,10 +67,17 @@ export const POST = async (req) => {
     });
 
     const result = await chain.invoke({
+        instructions: instructions,
         userQuestion: question,
         context: [document1],
-        history: history,
+        history: history.map((message) => `${message.role === "user" ? "User: " : "Bot: "}${message.message}`).join("\n"),
     });
 
-    return NextResponse.json(result, { status: 200 });
+    const outputParser = new StringOutputParser();
+
+    const parsed = await outputParser.invoke(result);
+
+    console.log(parsed);
+
+    return NextResponse.json(parsed, { status: 200 });
 };
