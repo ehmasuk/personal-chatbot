@@ -1,11 +1,9 @@
-import { ChatPromptTemplate } from "@langchain/core/prompts";
-import { ChatOpenAI } from "@langchain/openai";
-import { NextResponse } from "next/server";
-
-import { createStuffDocumentsChain } from "langchain/chains/combine_documents";
-
 import { Document } from "@langchain/core/documents";
-import axios from "axios";
+import { ChatPromptTemplate } from "@langchain/core/prompts";
+import { ChatOpenAI, OpenAIEmbeddings } from "@langchain/openai";
+import { Pinecone } from "@pinecone-database/pinecone";
+import { createStuffDocumentsChain } from "langchain/chains/combine_documents";
+import { NextResponse } from "next/server";
 
 export const POST = async (req) => {
     const { question, history } = await req.json();
@@ -16,24 +14,52 @@ export const POST = async (req) => {
         temperature: 0.7,
         openAIApiKey: process.env.OPENAI_API_KEY,
         verbose: true,
-        // maxTokens: 1000,
+        maxTokens: 1500,
     });
 
-    const allData = await axios.get("https://eazybuy-rho.vercel.app/api/products");
+    // Initialize Pinecone
+    const pinecone = new Pinecone({
+        apiKey: process.env.PINECONE_API_KEY,
+    });
 
+    const embeddings = new OpenAIEmbeddings({
+        apiKey: process.env.OPENAI_API_KEY,
+        model: "text-embedding-ada-002",
+    });
+
+    const pineconeIndex = pinecone.Index("lmschatbot");
+
+    // Generate embedding for the user's question
+    const questionEmbedding = await embeddings.embedQuery(question);
+
+    const queryRequest = {
+        vector: questionEmbedding,
+        topK: 3,
+        includeMetadata: true,
+        includeValues: true,
+    };
+
+    const searchResults = await pineconeIndex.namespace("text-data").query(queryRequest);
+
+    // Format the retrieved data as context
+    // const contextData = searchResults.matches.map((match) => match.metadata.text).join("\n");
+    const contextData = searchResults.matches.slice(0, 2).map((match) => match.metadata.text).join("\n");
+
+
+    const document1 = new Document({
+        pageContent: contextData,
+    });
 
     // create prompt
     const prompt = ChatPromptTemplate.fromTemplate(`
-        You are a data analizer. Answer the question according to the context.
+        You are a helpful and conversational chatbot. 
+        Answer user questions naturally without explicitly referencing any additional context unless specifically asked.
+        If the question cannot be answered based on your knowledge, politely explain and guide the user to provide more specific information.
+
         Context: {context}
         Question: {userQuestion}
         History: {history}
     `);
-
-    // knowledges
-    const document1 = new Document({
-        pageContent: JSON.stringify(allData.data),
-    });
 
     // create chain
     const chain = await createStuffDocumentsChain({
