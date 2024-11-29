@@ -81,7 +81,7 @@ function ChatBox({ initialMessages }) {
                                                 <div className="group/message relative max-w-[min(calc(100%-40px),65ch)]">
                                                     <div className="hyphens-auto break-words text-left text-sm leading-5 relative inline-block max-w-full rounded-[20px] rounded-bl px-5 py-4 bg-zinc-200/50 text-zinc-800">
                                                         <div className="w-full text-sm">
-                                                            <pre>{message.message}</pre>
+                                                            <div dangerouslySetInnerHTML={{ __html: message.message.replace(/\n/g, "<br>") }}></div>
                                                         </div>
                                                     </div>
                                                 </div>

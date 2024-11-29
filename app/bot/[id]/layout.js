@@ -10,13 +10,14 @@ function BotLayout({ children }) {
             label: <Link href="/bot/1">Playground</Link>,
         },
         {
-            key: "/bot/1/sources",
-            label: <Link href="/bot/1/sources">Sources</Link>,
+            key: "/bot/1/instruction",
+            label: <Link href="/bot/1/instruction">Instruction</Link>,
         },
         {
-            key: "/bot/1/activity",
-            label: <Link href="/bot/1/activity">Activity</Link>,
+            key: "/bot/1/knowledge",
+            label: <Link href="/bot/1/knowledge">Knowledge</Link>,
         },
+
     ];
 
     const pathName = usePathname();

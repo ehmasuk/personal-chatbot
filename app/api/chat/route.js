@@ -49,7 +49,7 @@ export const POST = async (req) => {
         pageContent: contextData,
     });
 
-    const instructions = `You are a helpful and conversational chatbot. 
+    const deafultInstructions = `You are a helpful and conversational chatbot. 
         Answer user questions naturally without explicitly referencing any additional context unless specifically asked.
         If the question cannot be answered based on your knowledge, politely explain and guide the user to provide more specific information.`;
 
@@ -67,17 +67,15 @@ export const POST = async (req) => {
     });
 
     const result = await chain.invoke({
-        instructions: instructions,
+        instructions: deafultInstructions,
         userQuestion: question,
         context: [document1],
-        history: history.map((message) => `${message.role === "user" ? "User: " : "Bot: "}${message.message}`).join("\n"),
+        history: history.map((message) =>
+            message.role === "user" ? message.message : message.message
+        ).join("\n"),
     });
 
-    const outputParser = new StringOutputParser();
+    console.log(result);
 
-    const parsed = await outputParser.invoke(result);
-
-    console.log(parsed);
-
-    return NextResponse.json(parsed, { status: 200 });
+    return NextResponse.json(result, { status: 200 });
 };
