@@ -10,7 +10,9 @@ function ChatBubble() {
         },
     ];
 
-    return <ChatBox initialMessages={messages} />;
+    return <div className="h-screen">
+        <ChatBox initialMessages={messages} />
+    </div>;
 }
 
 export default ChatBubble;

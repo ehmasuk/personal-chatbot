@@ -53,7 +53,7 @@ function SourcesTab() {
                     },
                     onSuccess: () => {
                         message.destroy(2);
-                        message.success("Hurray!🥳 chatbot trained with new knowledge");
+                        message.success("🥳Hurray! chatbot trained with new knowledge");
                     },
                 });
             },
@@ -62,31 +62,6 @@ function SourcesTab() {
                 message.error("Something went wrong..");
             },
         });
-
-        // message.loading({ content: "Training model with new knowledge, it may take a while...", key: 1, duration: 10000 });
-
-        // try {
-        //     await axios.post(process.env.NEXT_PUBLIC_API_URL + "/text", { content: newText });
-
-        //     message.destroy(1);
-        //     message.info("Finalizing training...");
-
-        //     postData({
-        //         baseUrl: "https://escuela-ray-bolivar-sosa.com/api",
-        //         endpoint: "/instructions",
-        //         data: {
-        //             text_data: newText,
-        //         },
-        //         allowMessage: false,
-        //         onSuccess: () => {
-        //             message.success("Hurray!🥳 chatbot trained with new knowledge");
-        //         },
-        //     });
-        // } catch (error) {
-        //     message.destroy(1);
-        //     console.log(error);
-        //     message.error("Something went wrong..");
-        // }
     };
 
     return (
