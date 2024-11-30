@@ -66,10 +66,10 @@ function SourcesTab() {
 
     return (
         <div className="rounded-lg border border-zinc-200 bg-white text-zinc-950 w-full shadow-sm">
-            <div className="flex flex-col space-y-1.5 p-6">
+            <div className="flex flex-col space-y-1.5 md:p-6 p-2">
                 <h3 className="text-2xl font-semibold leading-none tracking-tight">Knowledge</h3>
             </div>
-            <div className="p-6 pt-0">
+            <div className="md:p-6 p-2 pt-0">
                 <textarea
                     disabled={postLoading || loading}
                     placeholder={loading ? "Loading..." : "Enter your text here..."}

@@ -1,5 +1,4 @@
 import { Document } from "@langchain/core/documents";
-import { StringOutputParser } from "@langchain/core/output_parsers";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { ChatOpenAI, OpenAIEmbeddings } from "@langchain/openai";
 import { Pinecone } from "@pinecone-database/pinecone";
@@ -70,9 +69,7 @@ export const POST = async (req) => {
         instructions: deafultInstructions,
         userQuestion: question,
         context: [document1],
-        history: history.map((message) =>
-            message.role === "user" ? message.message : message.message
-        ).join("\n"),
+        history: history.map((message) => (message.role === "user" ? message.message : message.message)).join("\n"),
     });
 
     console.log(result);
