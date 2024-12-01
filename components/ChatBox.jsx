@@ -1,4 +1,5 @@
 "use client";
+import { message } from "antd";
 import axios from "axios";
 import { useRef, useState } from "react";
 import { GoPaperAirplane } from "react-icons/go";
@@ -67,6 +68,11 @@ function ChatBox({ initialMessages }) {
             }
         }
     };
+
+
+
+
+
 
     return (
         <div className="h-full w-full overflow-hidden rounded-lg border-[1px]">

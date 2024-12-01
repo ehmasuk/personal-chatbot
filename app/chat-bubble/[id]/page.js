@@ -5,7 +5,7 @@ function ChatBubble() {
         {
             role: "bot",
             id: 1,
-            message: "Hello, how can I assist you today?",
+            message: "Hola, ¿en qué puedo ayudarte hoy?",
             status: "success",
         },
     ];

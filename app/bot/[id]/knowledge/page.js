@@ -33,7 +33,7 @@ function SourcesTab() {
     const { postData, loading: postLoading } = usePost();
 
     const handleTextSubmit = async () => {
-        message.loading({ content: "🤖 Training model, it may take a while...", key: 1, duration: 10000 });
+        message.loading({ content: "🤖 Training model, it may take a upto 20 minutes...", key: 1, duration: 10000 });
 
         postData({
             endpoint: "/text",
