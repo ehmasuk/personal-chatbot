@@ -1,7 +1,7 @@
 "use client";
 
 import usePost from "@/hooks/usePost";
-import { Button, message } from "antd";
+import { Button, message, notification } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
@@ -53,7 +53,8 @@ function SourcesTab() {
                     },
                     onSuccess: () => {
                         message.destroy(2);
-                        message.success("🥳Hurray! chatbot trained with new knowledge");
+                        message.success("Completed!");
+                        notification.success({ message: "🥳Hurray!", description: "Your chatbot is trained with new knowledge",duration:0 });
                     },
                 });
             },

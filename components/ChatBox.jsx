@@ -1,5 +1,5 @@
 "use client";
-import { message } from "antd";
+import { stringFormatter } from "@/helpers/helperFunctions";
 import axios from "axios";
 import { useRef, useState } from "react";
 import { GoPaperAirplane } from "react-icons/go";
@@ -10,9 +10,9 @@ function ChatBox({ initialMessages }) {
     const chatBoxBodyRef = useRef(null);
 
     const scrollToBottom = () => {
-        setTimeout(()=>{
+        setTimeout(() => {
             chatBoxBodyRef.current.scrollTop = chatBoxBodyRef.current.scrollHeight;
-        },100)
+        }, 100);
     };
 
     const [conversations, setConversations] = useState(initialMessages);
@@ -69,11 +69,6 @@ function ChatBox({ initialMessages }) {
         }
     };
 
-
-
-
-
-
     return (
         <div className="h-full w-full overflow-hidden rounded-lg border-[1px]">
             <main className="group relative flex h-full flex-col bg-white">
@@ -83,13 +78,13 @@ function ChatBox({ initialMessages }) {
                 >
                     <div className="md:my-4 flex h-10 items-center">
                         <div className="flex items-center gap-2">
-                            <h1 className="font-semibold text-sm">Chat bot</h1>
+                            <h1 className="font-semibold text-sm">Ray masterclasses chat bot</h1>
                             <div className="size-1.5 animate-ping rounded-full bg-green-500"></div>
                         </div>
                     </div>
                 </header>
                 <div className="relative flex flex-1 basis-full flex-col overflow-y-hidden scroll-smooth shadow-inner">
-                    <div ref={chatBoxBodyRef} className="flex w-full flex-1 flex-col space-y-1 overflow-y-auto md:px-5 md:pt-5 md:pb-4 p-2 sm:overscroll-contain scroll-smooth">
+                    <div ref={chatBoxBodyRef} className="flex w-full flex-1 flex-col space-y-3 overflow-y-auto md:px-5 md:pt-5 md:pb-4 p-2 sm:overscroll-contain scroll-smooth">
                         {conversations?.map((message, index) => {
                             if (message.role === "bot") {
                                 return (
@@ -97,7 +92,7 @@ function ChatBox({ initialMessages }) {
                                         <div className="group/message relative max-w-[min(calc(100%-40px),65ch)]">
                                             <div className="hyphens-auto break-words text-left text-sm leading-5 relative inline-block max-w-full rounded-[20px] rounded-bl md:px-5 md:py-4 px-4 py-3 bg-zinc-200/50 text-zinc-800">
                                                 <div className="w-full text-sm">
-                                                    <div dangerouslySetInnerHTML={{ __html: message.message.replace(/\n/g, "<br>") }}></div>
+                                                    <div dangerouslySetInnerHTML={{ __html: stringFormatter(message.message) }}></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -128,7 +123,6 @@ function ChatBox({ initialMessages }) {
                     <form onSubmit={handleSendMessage}>
                         <div className="flex min-h-16 items-end border-zinc-200 border-t">
                             <input
-
                                 readOnly={loading}
                                 className="flex w-full border-zinc-200 bg-white text-sm ring-offset-white sm:overscroll-contain placeholder:text-zinc-500 my-auto max-h-40 min-h-8 resize-none rounded-none border-0 placeholder-zinc-400 sm:text-sm outline-none pointer-events-auto overflow-y-auto p-3"
                                 rows={1}
