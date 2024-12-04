@@ -50,8 +50,7 @@ export const POST = async (req) => {
 
     const deafultInstructions = `You are a helpful and conversational chatbot. 
         Answer user questions naturally without explicitly referencing any additional context unless specifically asked.
-        If the question cannot be answered based on your knowledge, politely explain and guide the user to provide more specific information.
-        Use emojies only when needed to express emotions`;
+        If the question cannot be answered based on your knowledge, politely explain and guide the user to provide more specific information `;
 
     // create prompt
     const prompt = ChatPromptTemplate.fromTemplate(`{instructions}
