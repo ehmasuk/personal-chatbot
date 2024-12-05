@@ -6,7 +6,6 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 function SourcesTab() {
-    const [isExploding, setIsExploding] = useState(false);
 
     const [defaultValue, setDefaultValue] = useState("");
 
@@ -53,9 +52,9 @@ function SourcesTab() {
                         text_data: newText,
                     },
                     onSuccess: () => {
+                        setText(null)
                         message.destroy(2);
                         message.success("Completed!");
-
                         notification.success({ message: "🥳Hurray!", description: "Your chatbot is trained with new knowledge", duration: 0, placement: "bottomRight" });
                     },
                 });
@@ -82,7 +81,7 @@ function SourcesTab() {
                 />
                 <div className="flex justify-end">
                     <Button loading={postLoading} disabled={!newText} type="primary" onClick={handleTextSubmit}>
-                        Save
+                        Train
                     </Button>
                 </div>
             </div>
