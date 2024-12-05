@@ -19,11 +19,11 @@ function BotLayout({ children }) {
             label: <Link href="/bot/1">Playground</Link>,
             icon: <IoChatboxEllipsesOutline />,
         },
-        {
-            key: "/bot/1/instruction",
-            label: <Link href="/bot/1/instruction">Instruction</Link>,
-            icon: <RiRobot3Line />,
-        },
+        // {
+        //     key: "/bot/1/instruction",
+        //     label: <Link href="/bot/1/instruction">Instruction</Link>,
+        //     icon: <RiRobot3Line />,
+        // },
         {
             key: "/bot/1/knowledge",
             label: <Link href="/bot/1/knowledge">Knowledge</Link>,

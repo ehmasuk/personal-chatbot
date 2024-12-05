@@ -6,6 +6,8 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 function SourcesTab() {
+    const [isExploding, setIsExploding] = useState(false);
+
     const [defaultValue, setDefaultValue] = useState("");
 
     const [newText, setText] = useState(null);
@@ -18,7 +20,6 @@ function SourcesTab() {
             const res = await axios.get("https://escuela-ray-bolivar-sosa.com/api/instructions");
             console.log(res.data);
             setDefaultValue(res.data.text_data || "");
-            s;
         } catch (error) {
             console.log(error);
         } finally {
@@ -33,7 +34,7 @@ function SourcesTab() {
     const { postData, loading: postLoading } = usePost();
 
     const handleTextSubmit = async () => {
-        message.loading({ content: "🤖 Training model, it may take a upto 20 minutes...", key: 1, duration: 10000 });
+        message.loading({ content: "🤖 Training model, it may take a upto 10 minutes...", key: 1, duration: 10000 });
 
         postData({
             endpoint: "/text",
@@ -54,7 +55,8 @@ function SourcesTab() {
                     onSuccess: () => {
                         message.destroy(2);
                         message.success("Completed!");
-                        notification.success({ message: "🥳Hurray!", description: "Your chatbot is trained with new knowledge",duration:0 });
+
+                        notification.success({ message: "🥳Hurray!", description: "Your chatbot is trained with new knowledge", duration: 0, placement: "bottomRight" });
                     },
                 });
             },

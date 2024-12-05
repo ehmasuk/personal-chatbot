@@ -8,7 +8,7 @@ function HomePage() {
                     <div>
                         <h4 className="text-3xl font-bold">Chatbots</h4>
                     </div>
-                    <form action="#" className="flex gap-1 items-center">
+                    <form action="#" className="flex gap-1 items-center hidden">
                         <input type="text" className="border border-gray-300 px-4 py-2 w-full outline-none" placeholder="Chatbot name" />
                         <button className="bg-black text-white font-semibold px-4 py-2 hover:bg-slate-700 min-w-28">Create</button>
                     </form>
@@ -31,7 +31,7 @@ function HomePage() {
                                 </svg>
                             </div>
                             <div className="flex h-14 items-center justify-center px-1">
-                                <h3 className="m-auto overflow-hidden text-center text-xs font-semibold md:text-sm">my bot</h3>
+                                <h3 className="m-auto overflow-hidden text-center text-xs font-semibold md:text-sm">Chatbot</h3>
                             </div>
                         </div>
                     </Link>

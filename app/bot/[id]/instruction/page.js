@@ -41,7 +41,7 @@ function SourcesTab() {
     };
 
     return (
-        <div className="rounded-lg border border-zinc-200 bg-white text-zinc-950 w-full shadow-sm">
+        <div className="rounded-lg border border-zinc-200 bg-white text-zinc-950 w-full shadow-sm hidden">
             <div className="flex flex-col space-y-1.5 md:p-6 p-2">
                 <h3 className="text-2xl font-semibold leading-none tracking-tight">Instructions</h3>
             </div>

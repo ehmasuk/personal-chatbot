@@ -6,16 +6,16 @@ export async function middleware(request) {
 
     const path = request.nextUrl.pathname;
 
-    if (path.startsWith("/bot") && !session) {
-        return NextResponse.redirect(new URL("/login", request.url));
-    }
+    // if (path.startsWith("/bot") && !session) {
+    //     return NextResponse.redirect(new URL("/login", request.url));
+    // }
 
-    if (path === "/" && !session) {
-        return NextResponse.redirect(new URL("/login", request.url));
-    }
-    if (path === "/login" && session) {
-        return NextResponse.redirect(new URL("/", request.url));
-    }
+    // if (path === "/" && !session) {
+    //     return NextResponse.redirect(new URL("/login", request.url));
+    // }
+    // if (path === "/login" && session) {
+    //     return NextResponse.redirect(new URL("/", request.url));
+    // }
 }
 
 export const config = {
