@@ -111,10 +111,20 @@ function ChatBox({ initialMessages }) {
                             }
                         })}
                         {loading && (
-                            <div className="inline-flex gap-1 items-center animate-pulse">
-                                <div className="h-1.5 w-1.5 bg-black rounded-full animate-bounce [animation-delay:-0.3s]" />
-                                <div className="h-1.5 w-1.5 bg-black rounded-full animate-bounce [animation-delay:-0.15s]" />
-                                <div className="h-1.5 w-1.5 bg-black rounded-full animate-bounce" />
+                            <div className="flex w-full items-end pr-8">
+                                <div className="group/message relative max-w-[min(calc(100%-40px),65ch)]">
+                                    <div className="hyphens-auto break-words text-left text-sm leading-5 relative inline-block max-w-full rounded-[20px] rounded-bl md:px-4 md:py-2 px-3 py-2 bg-zinc-200/50 text-zinc-800">
+                                        <div className="w-full text-sm">
+                                            <div>
+                                                <div className="inline-flex gap-1 items-center animate-pulse">
+                                                    <div className="h-1 w-1 bg-black rounded-full animate-bounce [animation-delay:-0.3s]" />
+                                                    <div className="h-1 w-1 bg-black rounded-full animate-bounce [animation-delay:-0.15s]" />
+                                                    <div className="h-1 w-1 bg-black rounded-full animate-bounce" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         )}
                     </div>

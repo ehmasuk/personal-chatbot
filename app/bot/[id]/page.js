@@ -10,10 +10,9 @@ function Playground() {
         {
             role: "bot",
             id: 1,
-            message: "Hello, how can I assist you today?.",
+            message: "Hola, ¿en qué puedo ayudarte hoy?",
             status: "success",
         },
-
     ];
 
     return (
@@ -22,7 +21,7 @@ function Playground() {
                 style={{ backgroundColor: "#fafafa", opacity: 1, backgroundImage: "radial-gradient(#001aff 0.5px, #fafafa 0.5px)", backgroundSize: "10px 10px" }}
                 className="w-full md:p-10 p-2 flex flex-col items-center justify-center border border-gray-200 rounded-lg"
             >
-                <div className="z-20 h-[70vh] w-full md:max-w-md hidden">
+                <div className="z-20 h-[70vh] w-full md:max-w-md">
                     <ChatBox initialMessages={messages} />
                 </div>
             </div>

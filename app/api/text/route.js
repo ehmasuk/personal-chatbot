@@ -16,6 +16,7 @@ export const POST = async (req) => {
             return NextResponse.json({ message: "Content cannot be empty" }, { status: 400 });
         }
 
+
         // Initialize Pinecone
         const pinecone = new Pinecone({
             apiKey: process.env.PINECONE_API_KEY,
