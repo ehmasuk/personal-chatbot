@@ -41,9 +41,11 @@ function SourcesTab() {
     };
 
     return (
-        <div className="rounded-lg border border-zinc-200 bg-white text-zinc-950 w-full shadow-sm hidden">
+        <div className="rounded-lg border border-zinc-200 bg-white text-zinc-950 w-full shadow-sm">
             <div className="flex flex-col space-y-1.5 md:p-6 p-2">
                 <h3 className="text-2xl font-semibold leading-none tracking-tight">Instructions</h3>
+
+                <p className="text-sm text-red-500">Do not use long text in instructions. Also be carefull changing the instructions because it will directly affect to the bot performance.</p>
             </div>
             <div className="md:p-6 p-2 pt-0">
                 <textarea
