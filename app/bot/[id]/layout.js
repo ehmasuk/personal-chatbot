@@ -1,33 +1,57 @@
 "use client";
+import useGet from "@/hooks/useGet";
 import { Menu } from "antd";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { GiConversation } from "react-icons/gi";
 import { IoBookOutline, IoChatboxEllipsesOutline } from "react-icons/io5";
+import { MdArrowBackIos } from "react-icons/md";
 import { RiRobot3Line } from "react-icons/ri";
 
 function BotLayout({ children }) {
     const [isReady, setIsReady] = useState(false);
 
     useEffect(() => {
-        setIsReady(window.innerHeight);
+        setIsReady(window.innerWidth);
     }, []);
+
+    const params = useParams();
+    const router = useRouter();
+
+    const { data } = useGet({ baseUrl: "https://escuela-ray-bolivar-sosa.com/api", endpoint: "/allchatbots" });
+
+    useEffect(() => {
+        if (data && !data.some((bot) => bot.bot_id === params.id)) {
+            router.push("/");
+        }
+    }, [data]);
 
     const items = [
         {
-            key: "/bot/1",
-            label: <Link href="/bot/1">Playground</Link>,
+            key: "/",
+            label: <Link href="/">All bots</Link>,
+            icon: <MdArrowBackIos />,
+        },
+        {
+            key: `/bot/${params.id}`,
+            label: <Link href={`/bot/${params.id}`}>Playground</Link>,
             icon: <IoChatboxEllipsesOutline />,
         },
         {
-            key: "/bot/1/instruction",
-            label: <Link href="/bot/1/instruction">Instruction</Link>,
+            key: `/bot/${params.id}/instruction`,
+            label: <Link href={`/bot/${params.id}/instruction`}>Instruction</Link>,
             icon: <RiRobot3Line />,
         },
         {
-            key: "/bot/1/knowledge",
-            label: <Link href="/bot/1/knowledge">Knowledge</Link>,
+            key: `/bot/${params.id}/knowledge`,
+            label: <Link href={`/bot/${params.id}/knowledge`}>Knowledge</Link>,
             icon: <IoBookOutline />,
+        },
+        {
+            key: `/bot/${params.id}/conversations`,
+            label: <Link href={`/bot/${params.id}/conversations`}>Conversations</Link>,
+            icon: <GiConversation />,
         },
     ];
 

@@ -8,10 +8,8 @@ function Playground() {
 
     const messages = [
         {
-            role: "bot",
-            id: 1,
-            message: "Hola, ¿en qué puedo ayudarte hoy?",
-            status: "success",
+            robo: "1",
+            body: "Hola, ¿en qué puedo ayudarte hoy?",
         },
     ];
 
@@ -22,7 +20,7 @@ function Playground() {
                 className="w-full md:p-10 p-2 flex flex-col items-center justify-center border border-gray-200 rounded-lg"
             >
                 <div className="z-20 h-[70vh] w-full md:max-w-md">
-                    <ChatBox initialMessages={messages} />
+                    <ChatBox botId={params.id} initialMessages={messages} />
                 </div>
             </div>
         </div>

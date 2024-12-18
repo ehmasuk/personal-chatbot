@@ -9,11 +9,11 @@ const generateId = (content) => crypto.createHash("md5").update(content).digest(
 
 export const POST = async (req) => {
     try {
-        const { content } = await req.json();
+        const { content, bot_id } = await req.json();
 
         // Validate content
-        if (!content || content.trim().length === 0) {
-            return NextResponse.json({ message: "Content cannot be empty" }, { status: 400 });
+        if (!content || content.trim().length === 0 || !bot_id) {
+            return NextResponse.json({ message: "Content and bot_id cannot be empty" }, { status: 400 });
         }
 
         // Initialize Pinecone
@@ -55,7 +55,7 @@ export const POST = async (req) => {
 
         // Delete existing data in Pinecone
         try {
-            await pineconeIndex.namespace("text-data").deleteAll();
+            await pineconeIndex.namespace(`chat-bot-${bot_id}`).deleteAll();
         } catch (error) {
             console.log(error);
         }
@@ -65,7 +65,7 @@ export const POST = async (req) => {
             const batchSize = 100;
             for (let i = 0; i < vectors.length; i += batchSize) {
                 const batch = vectors.slice(i, i + batchSize);
-                await pineconeIndex.namespace("text-data").upsert(batch);
+                await pineconeIndex.namespace(`chat-bot-${bot_id}`).upsert(batch);
             }
         };
 
