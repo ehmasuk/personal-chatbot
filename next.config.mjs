@@ -16,6 +16,7 @@ const nextConfig = {
         AUTH_SECRET: process.env.AUTH_SECRET,
         PINECONE_INDEX_HOST: process.env.PINECONE_INDEX_HOST,
     },
+    reactStrictMode: false,
 };
 
 export default nextConfig;

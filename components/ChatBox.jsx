@@ -2,16 +2,18 @@
 import { stringFormatter } from "@/helpers/helperFunctions";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { GoPaperAirplane } from "react-icons/go";
 
-function ChatBox({ initialMessages,botId }) {
+function ChatBox({ initialMessages, botId }) {
     const [userMessage, setUserMessage] = useState("");
 
-    const searchParams = useSearchParams()
+    const searchParams = useSearchParams();
 
-    const usersUrlLocation = searchParams.get("newchotbot_page_slug")
+    const pathname = usePathname();
+
+    const usersUrlLocation = searchParams.get("newchotbot_page_slug");
 
     const chatBoxBodyRef = useRef(null);
 
@@ -46,12 +48,12 @@ function ChatBox({ initialMessages,botId }) {
             try {
                 setLoading(true);
                 const response = await axios.post(process.env.NEXT_PUBLIC_API_URL + "/chat", {
-                    bot_id : botId,
+                    bot_id: botId,
                     question: message,
                     history: conversations.map((e) => {
                         return { role: e.robo === "0" ? "user" : "bot", message: e.body };
                     }),
-                    currentUrl : usersUrlLocation || window.location.href,
+                    currentUrl: usersUrlLocation || window.location.href,
                 });
 
                 const botResponse = {
@@ -70,11 +72,29 @@ function ChatBox({ initialMessages,botId }) {
         }
     };
 
+    const offerMessageWhenComesFromPost = {
+        robo: "1",
+        body: "¡Parece que estás muy interesado en este curso! 🎉 Por eso, te tenemos una oferta especial solo para ti. 🎁 https://escuela-ray-bolivar-sosa.com/newcart/show?addDirectInCart=112 ahora y obtén un 20% de descuento en este curso! ✨ ¡No dejes pasar esta oportunidad! ⏳ Aprovecha antes de que termine 💥",
+    };
+
+    const router = useRouter();
+
+    const userRedirectedFromPost = searchParams.get("redirected_from_post");
+
     const getUsersConversations = async (id) => {
         try {
             const res = await axios.get("https://escuela-ray-bolivar-sosa.com/api/chatbotconversation_cookie/" + id);
             if (res.data.length) {
                 setConversations(res.data);
+            }
+
+            if (userRedirectedFromPost) {
+                setConversations((prev) => [...prev, offerMessageWhenComesFromPost]);
+                saveConversationToDatabase({ message: offerMessageWhenComesFromPost.body, role: "bot" });
+
+                const nextSearchParams = new URLSearchParams(searchParams.toString());
+                nextSearchParams.delete("redirected_from_post");
+                router.replace(`${pathname}?${nextSearchParams}`);
             }
         } catch (error) {
             console.log(error);
@@ -119,6 +139,16 @@ function ChatBox({ initialMessages,botId }) {
         scrollToBottom();
     }, [conversations]);
 
+    const handleTest = () => {
+        // window.parent.postMessage(
+        //     {
+        //         action: "showDetails",
+        //         data: { test:"This is from nextjs" },
+        //     },
+        //     "*"
+        // );
+    };
+
     return (
         <div className="h-full w-full overflow-hidden rounded-lg border-[1px]">
             <main className="group relative flex h-full flex-col bg-white">
@@ -129,7 +159,7 @@ function ChatBox({ initialMessages,botId }) {
                     <div className="md:my-4 flex h-10 items-center">
                         <div className="flex items-center gap-2">
                             <h1 className="font-semibold text-sm">Chat bot</h1>
-                            <div className="size-1.5 animate-ping rounded-full bg-green-500"></div>
+                            <div onClick={handleTest} className="size-1.5 animate-ping rounded-full bg-green-500"></div>
                         </div>
                     </div>
                 </header>
