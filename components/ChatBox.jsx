@@ -11,6 +11,8 @@ function ChatBox({ initialMessages, botId }) {
 
     const searchParams = useSearchParams();
 
+    const router = useRouter();
+
     const pathname = usePathname();
 
     const usersUrlLocation = searchParams.get("newchotbot_page_slug");
@@ -74,10 +76,8 @@ function ChatBox({ initialMessages, botId }) {
 
     const offerMessageWhenComesFromPost = {
         robo: "1",
-        body: "¡Parece que estás muy interesado en este curso! 🎉 Por eso, te tenemos una oferta especial solo para ti. 🎁 https://escuela-ray-bolivar-sosa.com/newcart/show?addDirectInCart=112 ahora y obtén un 20% de descuento en este curso! ✨ ¡No dejes pasar esta oportunidad! ⏳ Aprovecha antes de que termine 💥",
+        body: "🎉 ** ¡Felicidades! Te has ganado un descuento del 5% adicional, sumando un total de 15%! ** 🎉 💡 Compra el curso en este enlace y descubre la sorpresa que hemos preparado para ti. ❓ ¿Te esperará un nuevo descuento? ✍️ ¿Clases adicionales para escribir esa gran historia? 🎁 O quizás, simplemente, te recompensaremos por tu fidelidad. 👉** https://escuela-ray-bolivar-sosa.com/newcart/show?addDirectInCart=112 y descúbrelo ahora! ** ✨",
     };
-
-    const router = useRouter();
 
     const userRedirectedFromPost = searchParams.get("redirected_from_post");
 
@@ -88,6 +88,7 @@ function ChatBox({ initialMessages, botId }) {
                 setConversations(res.data);
             }
 
+            // show offer message when user comes from post
             if (userRedirectedFromPost) {
                 setConversations((prev) => [...prev, offerMessageWhenComesFromPost]);
                 saveConversationToDatabase({ message: offerMessageWhenComesFromPost.body, role: "bot" });
@@ -96,6 +97,8 @@ function ChatBox({ initialMessages, botId }) {
                 nextSearchParams.delete("redirected_from_post");
                 router.replace(`${pathname}?${nextSearchParams}`);
             }
+
+
         } catch (error) {
             console.log(error);
         }
@@ -153,10 +156,10 @@ function ChatBox({ initialMessages, botId }) {
         <div className="h-full w-full overflow-hidden rounded-lg border-[1px]">
             <main className="group relative flex h-full flex-col bg-white">
                 <header
-                    className="relative flex items-center justify-between px-5 text-black"
+                    className="relative flex items-center justify-between px-5 text-black border-b border-gray-500"
                     style={{ background: "linear-gradient(0deg, rgba(0, 0, 0, 0.02) 0.44%, rgba(0, 0, 0, 0) 49.5%), rgb(255, 255, 255)" }}
                 >
-                    <div className="md:my-4 flex h-10 items-center">
+                    <div className="flex h-14 items-center">
                         <div className="flex items-center gap-2">
                             <h1 className="font-semibold text-sm">Chat bot</h1>
                             <div onClick={handleTest} className="size-1.5 animate-ping rounded-full bg-green-500"></div>
@@ -170,7 +173,7 @@ function ChatBox({ initialMessages, botId }) {
                                 return (
                                     <div key={index} className="flex w-full items-end pr-8">
                                         <div className="group/message relative max-w-[min(calc(100%-40px),65ch)]">
-                                            <div className="hyphens-auto break-words text-left text-sm leading-5 relative inline-block max-w-full rounded-[20px] rounded-bl md:px-5 md:py-4 px-4 py-3 bg-zinc-200/50 text-zinc-800">
+                                            <div className="hyphens-auto break-words text-left text-sm leading-5 relative inline-block max-w-full rounded-[20px] rounded-bl px-5 py-4 bg-zinc-200/50 text-zinc-800">
                                                 <div className="w-full text-sm">
                                                     <div dangerouslySetInnerHTML={{ __html: stringFormatter(item.body) }}></div>
                                                 </div>
