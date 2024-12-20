@@ -47,8 +47,6 @@ export const POST = async (req) => {
             includeValues: true,
         };
 
-        // const searchResults = await pineconeIndex.query(queryRequest);
-
         const searchResults = await pineconeIndex.namespace(`chat-bot-${bot_id}`).query(queryRequest);
 
         // Format the retrieved data as context
@@ -58,9 +56,7 @@ export const POST = async (req) => {
             pageContent: contextData,
         });
 
-        const deafultInstructions = `You are a helpful and conversational chatbot. 
-        Answer user questions naturally without explicitly referencing any additional context unless specifically asked.
-        If the question cannot be answered based on your knowledge, politely explain and guide the user to provide more specific information `;
+        const deafultInstructions = `You are a helpful and conversational chatbot. Answer user questions naturally without explicitly referencing any additional context unless specifically asked. If the question cannot be answered based on your knowledge, politely explain and guide the user to provide more specific information `;
 
         const instructions = await axios.get(`https://escuela-ray-bolivar-sosa.com/api/instructions?bot_id=${bot_id}`);
 
@@ -93,7 +89,8 @@ export const POST = async (req) => {
             usersCurrentUrl: currentUrl,
         });
 
-        console.log(result);
+        console.log("context data ======> " + contextData);
+        console.log("bot answer ========> " + result);
 
         return NextResponse.json(result, { status: 200 });
     } catch (error) {

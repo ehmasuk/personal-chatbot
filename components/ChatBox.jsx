@@ -1,29 +1,26 @@
 "use client";
 import { stringFormatter } from "@/helpers/helperFunctions";
+import usePost from "@/hooks/usePost";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { GoPaperAirplane } from "react-icons/go";
 
 function ChatBox({ initialMessages, botId }) {
     const [userMessage, setUserMessage] = useState("");
-
+    const { postData } = usePost();
     const searchParams = useSearchParams();
-
     const router = useRouter();
-
     const pathname = usePathname();
-
     const usersUrlLocation = searchParams.get("newchotbot_page_slug");
-
     const chatBoxBodyRef = useRef(null);
 
-    const scrollToBottom = () => {
-        setTimeout(() => {
-            chatBoxBodyRef.current.scrollTop = chatBoxBodyRef.current.scrollHeight;
-        }, 100);
-    };
+    const scrollToBottom = useCallback(() => {
+        chatBoxBodyRef.current?.scrollTo({
+            top: chatBoxBodyRef.current.scrollHeight,
+        });
+    }, []);
 
     const [conversations, setConversations] = useState(initialMessages);
 
@@ -31,46 +28,43 @@ function ChatBox({ initialMessages, botId }) {
 
     const handleSendMessage = async (e) => {
         e.preventDefault();
-        if (userMessage.trim() !== "") {
-            const message = userMessage.trim();
+        if (!userMessage.trim()) return;
 
-            setUserMessage("");
+        const message = userMessage.trim();
 
-            const newUserMessage = {
-                robo: "0",
-                body: message,
-            };
+        setUserMessage("");
 
-            setConversations((prev) => {
-                return [...prev, newUserMessage];
+        const newUserMessage = {
+            robo: "0",
+            body: message,
+        };
+
+        setConversations((prev) => {
+            return [...prev, newUserMessage];
+        });
+
+        saveConversationToDatabase({ message, role: "user" });
+
+        try {
+            setLoading(true);
+            const response = await axios.post(process.env.NEXT_PUBLIC_API_URL + "/chat", {
+                bot_id: botId,
+                question: message,
+                history: conversations.map((e) => {
+                    return { role: e.robo === "0" ? "user" : "bot", message: e.body };
+                }),
+                currentUrl: usersUrlLocation || window.location.href,
             });
 
-            saveConversationToDatabase({ message, role: "user" });
-
-            try {
-                setLoading(true);
-                const response = await axios.post(process.env.NEXT_PUBLIC_API_URL + "/chat", {
-                    bot_id: botId,
-                    question: message,
-                    history: conversations.map((e) => {
-                        return { role: e.robo === "0" ? "user" : "bot", message: e.body };
-                    }),
-                    currentUrl: usersUrlLocation || window.location.href,
-                });
-
-                const botResponse = {
-                    robo: "1",
-                    body: response.data,
-                };
-                setConversations((prev) => {
-                    return [...prev, botResponse];
-                });
-                saveConversationToDatabase({ message: response.data, role: "bot" });
-            } catch (error) {
-                console.log(error);
-            } finally {
-                setLoading(false);
-            }
+            const botResponse = { robo: "1", body: response.data };
+            setConversations((prev) => {
+                return [...prev, botResponse];
+            });
+            saveConversationToDatabase({ message: response.data, role: "bot" });
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -97,8 +91,6 @@ function ChatBox({ initialMessages, botId }) {
                 nextSearchParams.delete("redirected_from_post");
                 router.replace(`${pathname}?${nextSearchParams}`);
             }
-
-
         } catch (error) {
             console.log(error);
         }
@@ -115,26 +107,26 @@ function ChatBox({ initialMessages, botId }) {
         }
     }, []);
 
-    // save user message to database
+    // function to save conversation to database
     const saveConversationToDatabase = async ({ message, role }) => {
         const cookieData = Cookies.get("conversation-with-chatbot");
 
         if (cookieData && role === "user") {
-            try {
-                await axios.post("https://escuela-ray-bolivar-sosa.com/api/chatbotmsg", { body: message, cookie: JSON.parse(cookieData).conversationId });
-                console.log("user sent");
-            } catch (error) {
-                console.log(error);
-            }
+            postData({
+                baseUrl: "https://escuela-ray-bolivar-sosa.com/api",
+                endpoint: "/chatbotmsg",
+                data: { body: message, cookie: JSON.parse(cookieData).conversationId },
+                allowMessage: false,
+            });
         }
 
         if (cookieData && role === "bot") {
-            try {
-                await axios.post("https://escuela-ray-bolivar-sosa.com/api/chatbotmsg", { body: message, cookie: JSON.parse(cookieData).conversationId, robo: true });
-                console.log("bot sent");
-            } catch (error) {
-                console.log(error);
-            }
+            postData({
+                baseUrl: "https://escuela-ray-bolivar-sosa.com/api",
+                endpoint: "/chatbotmsg",
+                data: { body: message, cookie: JSON.parse(cookieData).conversationId, robo: true },
+                allowMessage: false,
+            });
         }
     };
 
@@ -142,27 +134,17 @@ function ChatBox({ initialMessages, botId }) {
         scrollToBottom();
     }, [conversations]);
 
-    const handleTest = () => {
-        // window.parent.postMessage(
-        //     {
-        //         action: "showDetails",
-        //         data: { test:"This is from nextjs" },
-        //     },
-        //     "*"
-        // );
-    };
-
     return (
         <div className="h-full w-full overflow-hidden rounded-lg border-[1px]">
             <main className="group relative flex h-full flex-col bg-white">
                 <header
-                    className="relative flex items-center justify-between px-5 text-black border-b border-gray-500"
+                    className="relative flex items-center justify-between px-5 text-black border-b border-gray-200"
                     style={{ background: "linear-gradient(0deg, rgba(0, 0, 0, 0.02) 0.44%, rgba(0, 0, 0, 0) 49.5%), rgb(255, 255, 255)" }}
                 >
                     <div className="flex h-14 items-center">
                         <div className="flex items-center gap-2">
                             <h1 className="font-semibold text-sm">Chat bot</h1>
-                            <div onClick={handleTest} className="size-1.5 animate-ping rounded-full bg-green-500"></div>
+                            <div className="size-1.5 animate-ping rounded-full bg-green-500"></div>
                         </div>
                     </div>
                 </header>

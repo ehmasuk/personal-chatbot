@@ -1,12 +1,11 @@
 "use client";
 
 import { login } from "@/actions/authActions";
+import robot from "@/public/robot.gif";
 import { message } from "antd";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { SlEmotsmile } from "react-icons/sl";
-import robot from "@/public/robot.gif"
 
 function LoginPage() {
     const router = useRouter();
@@ -29,12 +28,12 @@ function LoginPage() {
     };
 
     return (
-        <div className="bg-blue-100 flex h-screen items-center justify-center p-4 hidden">
+        <div className="bg-blue-100 flex h-screen items-center justify-center p-4">
             <div className="w-full max-w-md">
                 <div className="bg-white shadow-md rounded-md p-8">
                     <Image src={robot} width={100} alt="robot" className="mx-auto" />
 
-                    <h2 className="mt-2 text-center text-2xl font-bold tracking-tight text-gray-900">Sign in and train me</h2>
+                    <h2 className="mt-2 text-center text-2xl font-bold tracking-tight text-gray-900">¿Quién eres?</h2>
                     <form className="space-y-6 mt-4" onSubmit={handleLogin}>
                         <div>
                             <label htmlFor="password" className="block text-sm font-medium text-gray-700">

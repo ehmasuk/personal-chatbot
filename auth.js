@@ -6,7 +6,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         Credentials({
             name: "credentials",
             authorize: async (credentials) => {
-                const user = { password: "masuk" };
+                const user = { password: process.env.ADMIN_PASSWORD };
                 if (credentials.password === user.password) {
                     return user;
                 } else {
@@ -15,4 +15,5 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             },
         }),
     ],
+    trustHost: true,
 });

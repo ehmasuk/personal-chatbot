@@ -15,6 +15,8 @@ const nextConfig = {
         PINECONE_API_KEY: process.env.PINECONE_API_KEY,
         AUTH_SECRET: process.env.AUTH_SECRET,
         PINECONE_INDEX_HOST: process.env.PINECONE_INDEX_HOST,
+        ADMIN_PASSWORD: process.env.ADMIN_PASSWORD,
+        AUTH_TRUST_HOST: process.env.AUTH_TRUST_HOST,
     },
     reactStrictMode: false,
 };

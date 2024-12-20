@@ -17,6 +17,7 @@ function SourcesTab() {
 
     useEffect(() => {
         botData && setDefaultValue(botData.instructions || "");
+        console.log(botData);
     }, [botData]);
 
 
