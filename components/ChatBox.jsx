@@ -22,6 +22,13 @@ function ChatBox({ initialMessages, botId }) {
         });
     }, []);
 
+    // send message to the bot from LMS
+    window.addEventListener("message", (event) => {
+        if (event.data?.message) {
+            setConversations((prev) => [...prev, event.data.message]);
+        }
+    });
+
     const [conversations, setConversations] = useState(initialMessages);
 
     const [loading, setLoading] = useState(false);
