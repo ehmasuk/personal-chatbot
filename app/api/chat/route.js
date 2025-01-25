@@ -6,6 +6,8 @@ import axios from "axios";
 import { createStuffDocumentsChain } from "langchain/chains/combine_documents";
 import { NextResponse } from "next/server";
 
+
+
 import { AIMessage, HumanMessage } from "@langchain/core/messages";
 
 export const POST = async (req) => {

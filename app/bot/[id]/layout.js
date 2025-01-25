@@ -8,6 +8,9 @@ import { GiConversation } from "react-icons/gi";
 import { IoBookOutline, IoChatboxEllipsesOutline } from "react-icons/io5";
 import { MdArrowBackIos } from "react-icons/md";
 import { RiRobot3Line } from "react-icons/ri";
+import { HiCursorArrowRays } from "react-icons/hi2";
+
+
 
 function BotLayout({ children }) {
     const [isReady, setIsReady] = useState(false);
@@ -53,6 +56,11 @@ function BotLayout({ children }) {
             label: <Link href={`/bot/${params.id}/conversations`}>Conversations</Link>,
             icon: <GiConversation />,
         },
+        (params.id == 1 || params.id == 2 || params.id == 4)  && {
+            key: `/bot/${params.id}/triggers`,
+            label: <Link href={`/bot/${params.id}/triggers`}>Triggers</Link>,
+            icon: <HiCursorArrowRays />,
+        }
     ];
 
     const pathName = usePathname();

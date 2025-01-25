@@ -19,6 +19,7 @@ function Conversations() {
         try {
             const allConversations = await axios.get("https://escuela-ray-bolivar-sosa.com/api/chatbotthreads");
             setConversations(allConversations.data);
+            console.log(allConversations);
         } catch (error) {
             console.log(error);
         }

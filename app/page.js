@@ -23,7 +23,7 @@ function HomePage() {
             <div className="mx-auto max-w-5xl px-4">
                 <div className="flex align-center justify-between my-6">
                     <div>
-                        <h4 title="bot3" className="text-3xl font-bold flex items-center gap-3">
+                        <h4 title={`${process.env.ENV}`} className="text-3xl font-bold flex items-center gap-3">
                             Chatbots
                         </h4>
                     </div>
@@ -59,6 +59,18 @@ function HomePage() {
                             <Skeleton active />
                         </>
                     )}
+
+                    {/* masterbot */}
+                    <Link href={`/master-bot`}>
+                        <div className="relative flex w-40 flex-col justify-between overflow-hidden rounded border">
+                            <div className="w-full h-[100px] flex items-center justify-center bg-blue-50">
+                                <img src={`https://robohash.org/masterbot`} alt="bot avatar" className="w-full h-full object-contain" />
+                            </div>
+                            <div className="flex h-14 items-center justify-center px-1">
+                                <h3 className="m-auto overflow-hidden text-center text-xs font-semibold md:text-sm">Master bot</h3>
+                            </div>
+                        </div>
+                    </Link>
                 </div>
             </div>
         </div>

@@ -22,13 +22,6 @@ function ChatBox({ initialMessages, botId }) {
         });
     }, []);
 
-    // send message to the bot from LMS
-    window.addEventListener("message", (event) => {
-        if (event.data?.message) {
-            setConversations((prev) => [...prev, event.data.message]);
-        }
-    });
-
     const [conversations, setConversations] = useState(initialMessages);
 
     const [loading, setLoading] = useState(false);
@@ -103,6 +96,24 @@ function ChatBox({ initialMessages, botId }) {
         }
     };
 
+
+
+    useEffect(() => {
+        const handleSendMessageFromLms = (event) => {
+            if (event.data?.message) {
+                setConversations((prev) => [...prev, event.data.message]);
+            }
+        };
+
+        window.addEventListener("message", handleSendMessageFromLms);
+
+        scrollToBottom();
+
+        return () => {
+            window.removeEventListener("message", handleSendMessageFromLms);
+        };
+    }, []);
+
     useEffect(() => {
         const cookieData = Cookies.get("conversation-with-chatbot");
 
@@ -141,6 +152,10 @@ function ChatBox({ initialMessages, botId }) {
         scrollToBottom();
     }, [conversations]);
 
+    const test = () => {
+        console.log(conversations);
+    };
+
     return (
         <div className="h-full w-full overflow-hidden rounded-lg border-[1px]">
             <main className="group relative flex h-full flex-col bg-white">
@@ -150,7 +165,9 @@ function ChatBox({ initialMessages, botId }) {
                 >
                     <div className="flex h-14 items-center">
                         <div className="flex items-center gap-2">
-                            <h1 className="font-semibold text-sm">Chat bot</h1>
+                            <h1 className="font-semibold text-sm" onClick={test}>
+                                Chat bot
+                            </h1>
                             <div className="size-1.5 animate-ping rounded-full bg-green-500"></div>
                         </div>
                     </div>
