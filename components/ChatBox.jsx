@@ -14,6 +14,8 @@ function ChatBox({ initialMessages, botId }) {
     const router = useRouter();
     const pathname = usePathname();
     const usersUrlLocation = searchParams.get("newchotbot_page_slug");
+    const usersBookChapterId = searchParams.get("book_chapter");
+    const lmsUsersId = searchParams.get("user_id");
     const chatBoxBodyRef = useRef(null);
 
     const scrollToBottom = useCallback(() => {
@@ -54,6 +56,7 @@ function ChatBox({ initialMessages, botId }) {
                     return { role: e.robo === "0" ? "user" : "bot", message: e.body };
                 }),
                 currentUrl: usersUrlLocation || window.location.href,
+                bookChapterId: usersBookChapterId || null,
             });
 
             const botResponse = { robo: "1", body: response.data };
@@ -96,12 +99,24 @@ function ChatBox({ initialMessages, botId }) {
         }
     };
 
+    const [unableToSendMessage, setUnableToSendMessage] = useState(false);
 
+    const conversationsRef = useRef(conversations);
 
     useEffect(() => {
         const handleSendMessageFromLms = (event) => {
             if (event.data?.message) {
                 setConversations((prev) => [...prev, event.data.message]);
+            }
+
+            if (event.data?.removeSendButtonOnExceedMessage?.maxMessageLength < conversationsRef.current.length) {
+                setUnableToSendMessage((prev) => {
+                    if (!prev) {
+                        setUnableToSendMessage(true);
+                        setConversations((prev) => [...prev, event.data?.removeSendButtonOnExceedMessage?.message]);
+                    }
+                    return prev;
+                });
             }
         };
 
@@ -133,7 +148,7 @@ function ChatBox({ initialMessages, botId }) {
             postData({
                 baseUrl: "https://escuela-ray-bolivar-sosa.com/api",
                 endpoint: "/chatbotmsg",
-                data: { body: message, cookie: JSON.parse(cookieData).conversationId },
+                data: { body: message, cookie: JSON.parse(cookieData).conversationId, user_id: lmsUsersId },
                 allowMessage: false,
             });
         }
@@ -142,7 +157,7 @@ function ChatBox({ initialMessages, botId }) {
             postData({
                 baseUrl: "https://escuela-ray-bolivar-sosa.com/api",
                 endpoint: "/chatbotmsg",
-                data: { body: message, cookie: JSON.parse(cookieData).conversationId, robo: true },
+                data: { body: message, cookie: JSON.parse(cookieData).conversationId, robo: true, user_id: lmsUsersId },
                 allowMessage: false,
             });
         }
@@ -150,11 +165,8 @@ function ChatBox({ initialMessages, botId }) {
 
     useEffect(() => {
         scrollToBottom();
+        conversationsRef.current = conversations;
     }, [conversations]);
-
-    const test = () => {
-        console.log(conversations);
-    };
 
     return (
         <div className="h-full w-full overflow-hidden rounded-lg border-[1px]">
@@ -165,9 +177,7 @@ function ChatBox({ initialMessages, botId }) {
                 >
                     <div className="flex h-14 items-center">
                         <div className="flex items-center gap-2">
-                            <h1 className="font-semibold text-sm" onClick={test}>
-                                Chat bot
-                            </h1>
+                            <h1 className="font-semibold text-sm">Chat bot</h1>
                             <div className="size-1.5 animate-ping rounded-full bg-green-500"></div>
                         </div>
                     </div>
@@ -218,28 +228,30 @@ function ChatBox({ initialMessages, botId }) {
                         )}
                     </div>
                 </div>
-                <div className="flex shrink-0 flex-col justify-end">
-                    <form onSubmit={handleSendMessage}>
-                        <div className="flex min-h-16 items-end border-zinc-200 border-t">
-                            <input
-                                readOnly={loading}
-                                className="flex w-full border-zinc-200 bg-white text-sm ring-offset-white sm:overscroll-contain placeholder:text-zinc-500 my-auto max-h-40 min-h-8 resize-none rounded-none border-0 placeholder-zinc-400 sm:text-sm outline-none pointer-events-auto overflow-y-auto p-3 !text-black"
-                                rows={1}
-                                placeholder="Ingresa tus consultas aquí..."
-                                style={{ height: 44 }}
-                                value={userMessage}
-                                onChange={(e) => setUserMessage(e.target.value)}
-                            />
-                            <button
-                                className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors text-zinc-50 h-9 w-9 my-3 mr-2 disabled:opacity-50 size-5 bg-transparent shadow-none hover:bg-zinc-100/90"
-                                type="submit"
-                                disabled={loading}
-                            >
-                                <GoPaperAirplane className="text-zinc-700 text-lg" />
-                            </button>
-                        </div>
-                    </form>
-                </div>
+                {!unableToSendMessage && (
+                    <div className="flex shrink-0 flex-col justify-end">
+                        <form onSubmit={handleSendMessage}>
+                            <div className="flex min-h-16 items-end border-zinc-200 border-t">
+                                <input
+                                    readOnly={loading}
+                                    className="flex w-full border-zinc-200 bg-white text-sm ring-offset-white sm:overscroll-contain placeholder:text-zinc-500 my-auto max-h-40 min-h-8 resize-none rounded-none border-0 placeholder-zinc-400 sm:text-sm outline-none pointer-events-auto overflow-y-auto p-3 !text-black"
+                                    rows={1}
+                                    placeholder="Ingresa tus consultas aquí..."
+                                    style={{ height: 44 }}
+                                    value={userMessage}
+                                    onChange={(e) => setUserMessage(e.target.value)}
+                                />
+                                <button
+                                    className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors text-zinc-50 h-9 w-9 my-3 mr-2 disabled:opacity-50 size-5 bg-transparent shadow-none hover:bg-zinc-100/90"
+                                    type="submit"
+                                    disabled={loading}
+                                >
+                                    <GoPaperAirplane className="text-zinc-700 text-lg" />
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                )}
             </main>
         </div>
     );

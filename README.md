@@ -1,36 +1,89 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Personal AI Chatbot
 
-## Getting Started
+This project showcases a personal chatbot application developed using Next.js and Tailwind CSS. The chatbot leverages OpenAI's GPT-3.5-turbo model to provide interactive and dynamic responses to user inputs.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Admin dashboard** : Admin can create chatbots and train them with personal data
+- **Multiple chatbots**: Admin can create multiple chatbots with different data
+- **Instructions**: Admin can mention bot's role from dashboard
+- **Training with personal data**: Admin can train bot's with personal information and bot can response according to personalized data
+- **Seamless Integration**: Easily integrates into various platforms for versatile use.​
+- **Scalable Architecture**: Built to handle increasing user demands efficiently.​
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Technologies Used
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+- **Next.js**: A React framework for server-side rendering and static site generation.
+- **Tailwind CSS**: A utility-first CSS framework for rapid UI development.
+- **OpenAI GPT-3.5-turbo**: An advanced language model for natural language understanding and generation.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Project Structure
 
-## Learn More
+- **`app/`**: Contains the main application components and pages.
+- **`components/`**: Reusable UI components.
+- **`helpers/`**: Utility functions and helpers.
+- **`hooks/`**: Custom React hooks.
+- **`public/`**: Static assets like images and fonts.
 
-To learn more about Next.js, take a look at the following resources:
+## Setup and Installation
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+To run this project locally, follow these steps:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. **Clone the repository**:
 
-## Deploy on Vercel
+   ```bash
+   git clone https://github.com/ehmasuk/personal-chatbot.git
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+2. **Navigate to the project directory**:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+   ```bash
+   cd personal-chatbot
+   ```
+
+3. **Install dependencies**:
+
+   Using npm:
+
+   ```bash
+   npm install
+   ```
+
+   Or using yarn:
+
+   ```bash
+   yarn install
+   ```
+
+4. **Set up environment variables**:
+
+   - Rename the `example.env` file to `.env`.
+   - Add your OpenAI API key and other necessary configurations to the `.env` file.
+
+5. **Run the development server**:
+
+   Using npm:
+
+   ```bash
+   npm run dev
+   ```
+
+   Or using yarn:
+
+   ```bash
+   yarn dev
+   ```
+
+   Open [http://localhost:3000](http://localhost:3000) in your browser to view the application.
+
+## Deployment
+
+The application can be deployed on platforms like Vercel for seamless integration with Next.js projects. Ensure that all environment variables are correctly set up in the deployment environment.
+
+## Acknowledgements
+
+- **OpenAI**: For providing the GPT-3.5-turbo model used in the chatbot.
+- **Vercel**: For offering an excellent platform to deploy Next.js applications.
+- **Tailwind CSS**: For simplifying the styling process with utility-first CSS.
+
+_Note: This project is intended for personal use and documentation purposes only. It is not designed for public use or contributions._

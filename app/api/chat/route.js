@@ -1,21 +1,36 @@
 import { Document } from "@langchain/core/documents";
-import { ChatPromptTemplate, MessagesPlaceholder } from "@langchain/core/prompts";
+import { AIMessage, HumanMessage } from "@langchain/core/messages";
+import { ChatPromptTemplate, MessagesPlaceholder, PromptTemplate } from "@langchain/core/prompts";
 import { ChatOpenAI, OpenAIEmbeddings } from "@langchain/openai";
 import { Pinecone } from "@pinecone-database/pinecone";
 import axios from "axios";
 import { createStuffDocumentsChain } from "langchain/chains/combine_documents";
+
 import { NextResponse } from "next/server";
 
 
-
-import { AIMessage, HumanMessage } from "@langchain/core/messages";
-
 export const POST = async (req) => {
-    const { bot_id, question, history, currentUrl } = await req.json();
+    const { bot_id, question, history, currentUrl,bookChapterId } = await req.json();
 
     if (!bot_id || !question || !history || !currentUrl) {
         return NextResponse.json({ message: "bot_id, question, history,currentUrl cannot be empty" }, { status: 400 });
     }
+
+
+    const getBookInformations = async (id) => {
+        try {
+            const res = await axios.get(`https://escuela-ray-bolivar-sosa.com/api/book-chapter/${id}`);
+            return { 
+                full_text: res.data.full_text || null,
+                book_title: res.data.book.title || null,
+                chapter_title:res.data.title || null
+            };
+            
+        } catch (error) {
+            console.log(error);
+            return false;
+        }
+    };
 
     try {
         // create model
@@ -26,6 +41,48 @@ export const POST = async (req) => {
             verbose: true,
             maxTokens: 1500,
         });
+
+        var bookDocument = null;
+
+        const summarizeChapter = async (chunkText) => {
+            const prompt = PromptTemplate.fromTemplate("Resume la siguiente sección de la novela de manera concisa, manteniendo los detalles clave y la coherencia de la historia. Context: {context}");
+
+            const chain = await createStuffDocumentsChain({
+                llm: model,
+                prompt,
+            });
+
+            const result = await chain.invoke({
+                context: [new Document({ pageContent: chunkText })],
+            });
+
+            return result;
+        };
+
+
+        if (bookChapterId) {
+            const {full_text,book_title,chapter_title} = await getBookInformations(bookChapterId);
+            if(full_text){
+                const summary = await summarizeChapter(full_text);
+                bookDocument = new Document({
+                    pageContent: `
+                    Título del libro: ${book_title}  
+                    Título del capítulo: ${chapter_title}  
+                    Este es un capítulo de una novela que el usuario está escribiendo. El resumen del capítulo es el siguiente:  
+                    ${summary}`
+                })
+            } else {
+                bookDocument = new Document({
+                    pageContent: `
+                    Título del libro: ${book_title}  
+                    Título del capítulo: ${chapter_title}  
+                    El usuario aún no ha escrito nada en este capítulo. No hay contenido para resumir.`
+                });
+            }
+            
+
+        }
+        
 
         // Initialize Pinecone
         const pinecone = new Pinecone({
@@ -83,16 +140,21 @@ export const POST = async (req) => {
             }
         });
 
+        const allDocs = bookDocument ? [document1,bookDocument] : [document1];
+
+        
+
         const result = await chain.invoke({
             instructions: instructions.data.instructions || deafultInstructions,
             userQuestion: question,
-            context: [document1],
+            context: allDocs,
             history: chatHistory,
             usersCurrentUrl: currentUrl,
         });
 
         console.log("context data ======> " + contextData);
         console.log("bot answer ========> " + result);
+        console.log('allDocs=======================>',allDocs);
 
         return NextResponse.json(result, { status: 200 });
     } catch (error) {

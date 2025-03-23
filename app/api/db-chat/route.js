@@ -71,6 +71,7 @@ export const POST = async (req) => {
             "like_dislikes",
             "likes",
             "lms_subscribers",
+            "lms_trials",
             "mind_map_chapters",
             "mind_map_books",
             "order_offers",
